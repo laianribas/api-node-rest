@@ -1,5 +1,6 @@
 import express from 'express';
 import errorHandler from './middlewares/error-handler.middleware';
+import authorizationRoute from './routes/authorization.route';
 import statusRouter from './routes/status.route';
 import userRoute from './routes/user.route';
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 //configuração das rotas
 app.use(userRoute)
 app.use(statusRouter)
+app.use(authorizationRoute)
 
 //configuração dos Handlers de erro
 app.use(errorHandler)

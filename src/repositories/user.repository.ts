@@ -30,42 +30,60 @@ class UserRepository {
     }
   }
 
+  async findByUsernameAndPassword(username: string, password: string): Promise<User | null> {
+    try {
+      const query = `
+          SELECT uuid, username
+          FROM application_user
+          WHERE username = $1
+          AND
+          PASSWORD = crypt($2,'2ND90fMdXn')
+          `
+      const values = [username, password]
+      const { rows } = await db.query<User>(query, values)
+      const [user] = rows
+      return user || null
+    } catch (error) {
+      throw new DatabaseError('Usuário e/ou senha inválidos', error)
+    }
+  }
+
   async create(user: User): Promise<string> {
-    const script = `
+    const query = `
       INSERT INTO application_user (
         username, password
       )
-      VALUES ($1,  crypt($2, gen_salt('bf', 8)))
+      VALUES ($1,  crypt($2, '2ND90fMdXn'))
       RETURNING uuid
     `;
 
     const values = [user.username, user.password]
-    const { rows } = await db.query<{ uuid: string }>(script, values)
+    const { rows } = await db.query<{ uuid: string }>(query, values)
     const [newUser] = rows
     return newUser.uuid
   }
 
   async updade(user: User): Promise<void> {
-    const script = `
+    const query = `
       UPDATE application_user
       SET
           username = $1,  
-          password =  crypt($2, gen_salt('bf', 8))
+          password =  crypt($2,'2ND90fMdXn')
       WHERE uuid = $3
     `;
 
     const values = [user.username, user.password, user.uuid];
-    await db.query<{ uuid: string }>(script, values)
+    await db.query<{ uuid: string }>(query, values)
   }
 
   async removeUser(uuid: string): Promise<void> {
-    const script = `
+    const query = `
       DELETE
       FROM application_user
       WHERE uuid = $1
     `;
     const values = [uuid];
-    await db.query(script, values)
+    await db.query(query, values)
   }
 }
 export default new UserRepository();
