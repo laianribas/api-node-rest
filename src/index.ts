@@ -1,6 +1,6 @@
 import express from 'express';
-import jwtAuthMiddleware from './middlewares/jwt-auth.middleware';
 import errorHandler from './middlewares/error-handler.middleware';
+import jwtAuthMiddleware from './middlewares/jwt-auth.middleware';
 import authorizationRoute from './routes/authorization.route';
 import statusRouter from './routes/status.route';
 import userRoute from './routes/user.route';
@@ -16,6 +16,7 @@ app.use(statusRouter)
 app.use(authorizationRoute)
 app.use(jwtAuthMiddleware)
 app.use(userRoute)
+
 //configuração dos Handlers de erro
 app.use(errorHandler)
 
