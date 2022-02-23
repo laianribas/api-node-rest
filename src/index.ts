@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express';
 import errorHandler from './middlewares/error-handler.middleware';
 import jwtAuthMiddleware from './middlewares/jwt-auth.middleware';
@@ -20,6 +21,6 @@ app.use(userRoute)
 //configuração dos Handlers de erro
 app.use(errorHandler)
 
-app.listen(3003, () => {
-  console.log('listening on port 3003');
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`listening on port ${process.env.SERVER_PORT}`);
 });

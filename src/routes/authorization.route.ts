@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NextFunction, Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import JWT, { SignOptions } from 'jsonwebtoken';
@@ -19,8 +20,8 @@ authorizationRoute.post('/token', basicAuthMiddleware, async (request: Request, 
     const jwtPayload = { username: user.username }
     const jwtOptions = { subject: user?.uuid, expiresIn: '5m' }
     const jwtRefreshOptions = { subject: user?.uuid, expiresIn: '10m' }
-    const jwtSecret = 'my_secret_key'
-    const jwtRefreshToken = 'my_refresh_key'
+    const jwtSecret = process.env.SECRET_KEY
+    const jwtRefreshToken = process.env.REFRESH_KEY
 
     const jwt = await JWT.sign(
       jwtPayload,
@@ -54,10 +55,10 @@ authorizationRoute.post('/token/refresh', async (request: Request, response: Res
   }
 
   try {
-    const authUser = await JWT.verify(refreshToken, 'my_refresh_key')
+    const authUser = await JWT.verify(refreshToken, process.env.REFRESH_KEY)
     console.log(authUser.sub)
     const jwtPayload = { username: authUser.username }
-    const jwtSecret = 'my_secret_key'
+    const jwtSecret = process.env.SECRET_KEY
     const jwtOptions: SignOptions = { subject: authUser.sub }
 
     const jwt = JWT.sign(

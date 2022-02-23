@@ -37,7 +37,7 @@ class UserRepository {
           FROM application_user
           WHERE username = $1
           AND
-          PASSWORD = crypt($2,'2ND90fMdXn')
+          PASSWORD = crypt($2, '2ND90fMdXn')
           `
       const values = [username, password]
       const { rows } = await db.query<User>(query, values)
@@ -68,7 +68,7 @@ class UserRepository {
       UPDATE application_user
       SET
           username = $1,  
-          password =  crypt($2,'2ND90fMdXn')
+          password =  crypt($2, '2ND90fMdXn')
       WHERE uuid = $3
     `;
 
